@@ -1,3 +1,4 @@
+/// Returns the n-th prime number.
 pub fn nth_prime_number(nth: u32) -> u32 {
     let mut number = 2_u32;
     let mut index = 1_u32;
@@ -13,6 +14,7 @@ pub fn nth_prime_number(nth: u32) -> u32 {
     number
 }
 
+/// Private function for checking if the number is prime.
 fn is_prime(val: u32) -> bool {
     let upper_bound = (val as f64).sqrt().ceil() as u32;
 
