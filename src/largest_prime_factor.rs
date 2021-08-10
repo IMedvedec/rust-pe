@@ -6,7 +6,7 @@ pub fn largest_prime_factor(x: &str) -> String {
         .collect();
     let sub: &mut [u8; 3] = &mut [0, 1, 0];
 
-    let x = subtract(number.as_mut_slice(), sub).expect("None returned on subtraction");
+    let x = addition(number.as_mut_slice(), sub).expect("None returned on subtraction");
     println!("{:?}", x);
 
     String::from_utf8_lossy(&x).to_string()
@@ -32,4 +32,24 @@ fn subtract<'a>(minuend: &'a mut [u8], subtrahend: &mut [u8]) -> Option<&'a [u8]
     }
 
     Some(minuend)
+}
+
+fn addition<'a>(first_addend: &'a mut [u8], second_addend: &mut [u8]) -> Option<&'a [u8]> {
+    let mut carry = 0_u8;
+
+    for (fa, sa) in first_addend.iter_mut().zip(second_addend) {
+        if (*fa + *sa) >= 10 {
+            *fa = (*fa + *sa) - 10;
+            carry = 1_u8;
+        } else {
+            *fa = *fa + *sa;
+            carry = 0_u8;
+        }
+    }
+
+    if carry > 0 {
+        return None;
+    }
+
+    Some(first_addend)
 }
