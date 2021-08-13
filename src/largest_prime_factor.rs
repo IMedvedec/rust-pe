@@ -1,3 +1,5 @@
+/// Function returns the largest prime factor for the given value.
+/// If the given value is 0 or 1, the function panics with a message.
 pub fn largest_prime_factor(val: u64) -> u64 {
     use std::collections::btree_map::BTreeMap;
     let mut prime_factors: BTreeMap<u64, u64> = BTreeMap::new();
@@ -25,14 +27,19 @@ pub fn largest_prime_factor(val: u64) -> u64 {
         .expect(format!("Largest prime not found for number: {}", val).as_str())
 }
 
+/// Helper function to check if a number is prime.
 fn is_prime(val: u64) -> bool {
-    let upper_bound = (val as f64).sqrt().ceil() as u64;
-
-    for x in 2..=upper_bound {
-        if val % x == 0 {
-            return false;
+    match val {
+        0 | 1 => false,
+        2 => true,
+        _ => {
+            let upper_bound = (val as f64).sqrt().ceil() as u64;
+            for x in 2..=upper_bound {
+                if val % x == 0 {
+                    return false;
+                }
+            }
+            true
         }
     }
-
-    true
 }
