@@ -1,15 +1,57 @@
 pub fn largest_prime_factor(x: &str) -> String {
-    let mut number: Vec<u8> = x
+    let mut number = number_string_to_slice(x, None);
+
+    use std::collections::HashMap;
+    let mut prime_factors: HashMap<u64, u64> = HashMap::new();
+
+    let mut factor = 2_u64;
+    while factor.to_string() != x {
+        let mut divisor = number_string_to_slice(&factor.to_string(), Some(number.len()));
+        println!("{:?}", divisor);
+
+        if !is_prime(factor) {
+            factor += 1;
+            continue;
+        }
+
+        match division(number.as_mut_slice(), &mut divisor) {
+            None => factor += 1,
+            Some(_) => {
+                subtract(number.as_mut_slice(), &mut divisor);
+                prime_factors.insert(factor, prime_factors.get(&factor).unwrap_or(&0) + 1);
+            }
+        }
+        println!("Maplen -> {}", prime_factors.len());
+    }
+
+    if prime_factors.len() == 0 {
+        return format!("Number {} is prime!", x);
+    }
+
+    for x in prime_factors.keys() {
+        println!("Factor -> {}", *x)
+    }
+
+    "Rez".to_string()
+}
+
+fn number_string_to_slice(x: &str, length: Option<usize>) -> Vec<u8> {
+    let number: Vec<u8> = x
         .chars()
         .rev()
         .map(|c| c.to_digit(10).unwrap() as u8)
         .collect();
-    let sub: &mut [u8; 3] = &mut [2, 0, 0];
 
-    let x = division(number.as_mut_slice(), sub).expect("None returned on subtraction");
-    println!("{:?}", x);
+    if let Some(len) = length {
+        let mut result: Vec<u8> = vec![0; len];
+        for (n, r) in number.iter().zip(result.iter_mut()) {
+            *r = *n;
+        }
 
-    String::from_utf8_lossy(&x).to_string()
+        return result;
+    }
+
+    number
 }
 
 /// Large number subtraction represented by u8 slices.
@@ -73,4 +115,16 @@ fn division(dividend: &mut [u8], divisor: &mut [u8]) -> Option<Vec<u8>> {
             }
         }
     }
+}
+
+fn is_prime(val: u64) -> bool {
+    let upper_bound = (val as f64).sqrt().ceil() as u64;
+
+    for x in 2..=upper_bound {
+        if val % x == 0 {
+            return false;
+        }
+    }
+
+    true
 }
