@@ -1,3 +1,5 @@
+/// Function returns the sum of the highest perfect square number
+/// that devides each number from 1 to given val.
 pub fn sum_of_squares(val: u64) -> u64 {
     let sequence = 1..=val;
 
@@ -7,6 +9,8 @@ pub fn sum_of_squares(val: u64) -> u64 {
         .sum()
 }
 
+/// Function represents the same functionality as sum_of_squares but uses
+/// threads for concurrent/parallel execution.
 pub fn sum_of_squares_parallel(val: u64) -> u64 {
     use std::sync::mpsc;
     use std::thread;
@@ -61,6 +65,7 @@ pub fn sum_of_squares_parallel(val: u64) -> u64 {
     rx1.recv().unwrap() + rx2.recv().unwrap() + rx3.recv().unwrap() + rx4.recv().unwrap()
 }
 
+/// Helper function which returns the largest perfect square number that divies given val.
 fn largest_perfect_square_division(val: u64) -> u64 {
     let mut perfect_square_iter = PerfectSquareIter::new();
 
@@ -82,16 +87,19 @@ fn largest_perfect_square_division(val: u64) -> u64 {
     result
 }
 
+/// Perfect square number iterator.
 struct PerfectSquareIter {
     n: u64,
 }
 
 impl PerfectSquareIter {
+    /// Perfect square number iterator basic constructor.
     fn new() -> PerfectSquareIter {
         PerfectSquareIter { n: 0 }
     }
 }
 
+/// Perfect square number iterator implementation.
 impl Iterator for PerfectSquareIter {
     type Item = u64;
 
